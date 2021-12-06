@@ -1,19 +1,7 @@
-<template>
-  <div class="hello">
-    <h1>Recipes</h1>
-    <ul v-for="recipe in recipes" :key="recipe.id">
-      <router-link :to="'/recipe/' + recipe.id"
-        ><li>{{ recipe.name }}</li></router-link
-      >
-    </ul>
-  </div>
-</template>
+<template></template>
 
 <script>
-// @ is an alias to /src
-
 export default {
-  name: "Home",
   data() {
     return {
       recipes: [
@@ -40,3 +28,21 @@ export default {
   },
 };
 </script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="scss">
+h3 {
+  margin: 40px 0 0;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+}
+</style>
