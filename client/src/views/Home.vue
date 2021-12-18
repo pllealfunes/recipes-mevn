@@ -2,7 +2,9 @@
   <div class="hello">
     <h1>Recipes</h1>
     <ul v-for="recipe in recipes" :key="recipe.id">
-      <router-link :to="'/recipe/' + recipe.id"
+      <router-link
+        :recipe="recipe"
+        v-bind:to="{ name: 'Recipe', params: { id: recipe.id } }"
         ><li>{{ recipe.name }}</li></router-link
       >
     </ul>
@@ -11,9 +13,9 @@
 
 <script>
 // @ is an alias to /src
-
 export default {
   name: "Home",
+  //props: ["recipe"],
   data() {
     return {
       recipes: [

@@ -1,5 +1,19 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <div class="hello">
+    <div v-if="recipe">
+      <h1>{{ recipe.id }}</h1>
+    </div>
   </div>
 </template>
+
+<script>
+// @ is an alias to /src
+
+export default {
+  name: "",
+  props: {
+    recipe: Object,
+  },
+  data() {},
+};
+</script>
