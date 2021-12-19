@@ -13,7 +13,10 @@ const db = mongoose.connection;
 db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Connected to database!'));
 
-server.use('/apia/recipes', recipesApi);
+server.use(express.json());
+server.use(express.urlencoded({ extended: true }));
+
+server.use('/api/recipes', recipesApi);
 
 server.get("/", (req, res) => {
     res.send("Hello World!");
