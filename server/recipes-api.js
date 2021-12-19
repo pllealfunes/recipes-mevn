@@ -11,7 +11,7 @@ router.get('/', (req, res, next) => {
         .then((recipes) => {
             console.log(`API: Found recipes: ${recipes}`);
             res.status(200);
-            res.set({ 'Content-type': 'application/json' })
+            res.set({ 'Content-Type': 'application/json' })
             res.send(JSON.stringify(recipes));
         }).catch((err) => {
             res.status(404);
