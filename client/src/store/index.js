@@ -3,8 +3,10 @@ import { axios } from "axios";
 let apiURL = 'http://localhost:3000/api/recipes';
 
 export default createStore({
-  state: {
-    recipes: []
+  state() {
+    return {
+      recipes: []
+    }
   },
   mutations: {
     SET_RECIPES(state, payload) {
