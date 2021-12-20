@@ -14,17 +14,6 @@ export default {
     recipes() {
       return this.$store.dispatch("getRecipes");
     },
-    cart() {
-      return this.$store.state.cart;
-    },
-  },
-  mounted() {
-    this.loadRecipes();
-  },
-  methods: {
-    loadRecipes() {
-      this.$store.dispatch("getRecipes");
-    },
   },
 };
 </script>
