@@ -3,6 +3,21 @@ var router = express.Router();
 const recipesController = require('./recipesController');
 const RecipeService = recipesController.RecipeService;
 
+
+router.use((req, res, next) => {
+    res.set({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type,Access-Control-Allow-Headers',
+    });
+    if (req.method == 'OPTIONS') {
+        return res.status(200).end();
+    }
+    next();
+});
+
+
 // routing code
 
 // list

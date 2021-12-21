@@ -15,6 +15,14 @@ export default {
       return this.$store.dispatch("getRecipes");
     },
   },
+  mounted() {
+    this.loadRecipes();
+  },
+  methods: {
+    loadRecipes() {
+      this.$store.dispatch("getRecipes");
+    },
+  },
 };
 </script>
 

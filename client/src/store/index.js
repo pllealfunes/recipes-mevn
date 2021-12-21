@@ -1,6 +1,5 @@
 import { createStore } from "vuex";
-import { axios } from "axios";
-let apiURL = 'http://localhost:3000/api/recipes';
+let apiUrl = 'http://localhost:3000/api/recipes';
 
 export default createStore({
   state() {
@@ -15,18 +14,27 @@ export default createStore({
   },
   actions: {
     getRecipes({ commit }) {
-      /*axios.get(apiURL).then((response) =>
-        (commit("SET_RECIPES", response.data)))
-    }*/
-      axios.get(apiURL)
-        .then(response => response.data)
-        .then(recipes => {
-          commit('SET_RECIPES', recipes)
-        }).catch(error => {
-          console.log(error);
-        })
+      fetch(apiUrl, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then((res) => res.json())
+        .then((data) => (commit("SET_RECIPES", data)))
+        .catch((err) => console.log(err.message));
     }
 
+  },
+  getters: {
+    getRecipeById(state) {
+      return function (id) {
+        return state.recipes.find((recipe) => {
+          return recipe._id == id;
+        }, id[0])
+      }
+    }
   },
   modules: {},
 });
