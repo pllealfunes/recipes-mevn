@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-let apiUrl = 'http://localhost:3000/api/recipes';
+let apiUrl = 'http://localhost:3000/api/recipes/';
 
 export default createStore({
   state() {
@@ -24,8 +24,17 @@ export default createStore({
         .then((res) => res.json())
         .then((data) => (commit("SET_RECIPES", data)))
         .catch((err) => console.log(err.message));
-    }
-
+    },
+    deleteRecipe(context, id) {
+      fetch(apiUrl + id, {
+        method: 'DELETE',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .catch((err) => console.log(err.message));
+    },
   },
   getters: {
     getRecipeById(state) {

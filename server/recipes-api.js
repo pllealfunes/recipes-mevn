@@ -61,6 +61,7 @@ router.post('/:newRecipe', (req, res, next) => {
             res.status(200);
             res.set({ 'Content-Type': 'application/json' })
             res.send(JSON.stringify(recipe));
+            console.log(`Added recipe ${recipe}`);
         }).catch((err) => {
             res.status(404);
             res.send();
@@ -74,6 +75,7 @@ router.put('/updateRecipe/:recipeid', (req, res, next) => {
         .then((updateRecipe) => {
             res.status(200);
             res.json(updateRecipe);
+            console.log(`Updated recipe: ${updateRecipe}`);
         }).catch((err) => {
             res.status(404);
             res.end();
@@ -84,11 +86,11 @@ router.put('/updateRecipe/:recipeid', (req, res, next) => {
 
 //  delete
 router.delete('/:recipeid', (req, res, next) => {
-    let id = req.params.recipeid;
     RecipeService.delete(req.params.recipeid)
         .then((recipe) => {
             res.status(200);
             res.send(JSON.stringify(recipe));
+            console.log("Deleted recipe");
         }).catch((err) => {
             res.status(404);
             res.end();

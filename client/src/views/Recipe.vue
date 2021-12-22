@@ -14,6 +14,7 @@
           {{ instruction }}
         </li>
       </ul>
+      <button @click="deleteRecipe(id)">Delete Recipe</button>
     </div>
   </div>
 </template>
@@ -24,6 +25,13 @@
 export default {
   name: "",
   props: ["id"],
+  methods: {
+    deleteRecipe(id) {
+      this.$store.dispatch("deleteRecipe", id);
+      this.$store.dispatch("getRecipes");
+      this.$router.push({ path: "/" });
+    },
+  },
   computed: {
     recipe() {
       return this.$store.getters.getRecipeById(this.id);
