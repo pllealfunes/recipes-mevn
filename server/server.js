@@ -25,7 +25,6 @@ server.use(express.urlencoded({ extended: true }));
 
 server.use('/api/recipes', recipesApi);
 
-
 server.get("/", (req, res) => {
     res.send("Hello World!");
 })

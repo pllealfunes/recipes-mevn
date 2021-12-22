@@ -25,6 +25,20 @@ export default createStore({
         .then((data) => (commit("SET_RECIPES", data)))
         .catch((err) => console.log(err.message));
     },
+    newRecipe(context, recipe) {
+      fetch(apiUrl + "newRecipe", {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          "title": recipe.title,
+          "ingrediants": recipe.ingrediants,
+          "instructions": recipe.instructions
+        })
+      })
+        .catch((err) => console.log(err.message));
+
+    },
     deleteRecipe(context, id) {
       fetch(apiUrl + id, {
         method: 'DELETE',
