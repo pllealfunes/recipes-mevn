@@ -16,12 +16,7 @@ export default {
     },
   },
   mounted() {
-    this.loadRecipes();
-  },
-  methods: {
-    loadRecipes() {
-      this.$store.dispatch("getRecipes");
-    },
+    this.$store.dispatch("getRecipes");
   },
 };
 </script>

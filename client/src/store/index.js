@@ -39,6 +39,15 @@ export default createStore({
         .catch((err) => console.log(err.message));
 
     },
+    editRecipe(context, recipe) {
+      fetch(apiUrl + "updateRecipe/" + recipe._id, {
+        method: 'PUT',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(recipe)
+      })
+        .catch((err) => console.log(err.message));
+    },
     deleteRecipe(context, id) {
       fetch(apiUrl + id, {
         method: 'DELETE',
