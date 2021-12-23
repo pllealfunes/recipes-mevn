@@ -5,6 +5,13 @@
       <router-link :to="'/editRecipe/' + recipe._id">
         <button>Edit Recipe</button>
       </router-link>
+      <div
+        id="confirmation-message"
+        data-test="test-add-confirmation"
+        v-if="showConfirmationMessage"
+      >
+        Added Ingrediant to Shopping List
+      </div>
       <div>
         <button id="add-favorite" v-if="isFavorite" @click="deleteFavorite()">
           Remove from Favorites
@@ -17,6 +24,9 @@
       <ul id="ingrediant-list">
         <li v-for="ingrediant in splitIngrediants" :key="ingrediant">
           {{ ingrediant }}
+          <button id="add-shoppinglist" @click="addShoppingList(ingrediant)">
+            Buy
+          </button>
         </li>
       </ul>
       <h2 id="instructions-title">Instructions</h2>
@@ -27,11 +37,17 @@
       </ul>
       <button @click="deleteRecipe()">Delete Recipe</button>
     </div>
+    <div v-else>
+      <router-link id="home" :to="'/'">Home Page</router-link>
+      <router-link :to="'/addRecipe'">Add Recipe</router-link>
+      <p id="unknown-recipe">Recipe {{ id }} Not Found.</p>
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
+//import { cart } from "@/common/Cart.js'";
 
 export default {
   name: "",

@@ -1,12 +1,16 @@
 <template>
   <div id="create-page">
     <h1>Add New Recipe</h1>
-    <router-link data-test="test-home-link" id="home" :to="'/'"
-      >Home Page</router-link
-    >
+    <router-link id="home" :to="'/'">Home Page</router-link>
     <div id="confirmation-message" v-if="showConfirmationMessage">
       Successfully Added Recipe
     </div>
+
+    <ul id="create-errors" v-if="errors">
+      <li class="error" v-for="(error, index) in errors" :key="index">
+        {{ error.toString() }}
+      </li>
+    </ul>
 
     <div id="addRecipeForm">
       <label for="title"></label>
@@ -43,6 +47,7 @@ export default {
   name: "",
   data() {
     return {
+      errors: null,
       showConfirmationMessage: false,
       recipe: {
         title: "",
