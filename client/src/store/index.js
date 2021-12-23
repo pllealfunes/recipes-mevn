@@ -5,26 +5,20 @@ import axios from 'axios'
 export default createStore({
   state() {
     return {
+      cartCount: 0,
       recipes: []
     }
   },
   mutations: {
+    SET_CART_COUNT(state, payload) {
+      state.cartCount = payload;
+    },
     SET_RECIPES(state, payload) {
       state.recipes = payload
     }
   },
   actions: {
     getRecipes({ commit }) {
-      /*fetch(apiUrl, {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then((res) => res.json())
-        .then((data) => (commit("SET_RECIPES", data)))
-        .catch((err) => console.log(err.message));*/
       axios.get(apiUrl)
         .then(response => response.data)
         .then(recipes => {
@@ -35,16 +29,6 @@ export default createStore({
 
     },
     newRecipe(context, recipe) {
-      /*fetch(apiUrl + "newRecipe", {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          "title": recipe.title,
-          "ingrediants": recipe.ingrediants,
-          "instructions": recipe.instructions
-        })
-      })*/
       axios.post(apiUrl + "newRecipe", {
         "title": recipe.title,
         "ingrediants": recipe.ingrediants,
@@ -54,12 +38,6 @@ export default createStore({
 
     },
     editRecipe(context, recipe) {
-      /*fetch(apiUrl + "updateRecipe/" + recipe._id, {
-        method: 'PUT',
-        mode: 'cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(recipe)
-      })*/
       axios.put(apiUrl + "updateRecipe/" + recipe._id, {
         "title": recipe.title,
         "ingrediants": recipe.ingrediants,
@@ -68,13 +46,6 @@ export default createStore({
         .catch((err) => console.log(err.message));
     },
     deleteRecipe(context, id) {
-      /*fetch(apiUrl + id, {
-        method: 'DELETE',
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })*/
       axios.delete(apiUrl + id)
         .catch((err) => console.log(err.message));
     },

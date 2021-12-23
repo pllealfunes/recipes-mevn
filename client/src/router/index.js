@@ -17,12 +17,18 @@ const routes = [
   {
     path: "/addRecipe",
     name: "AddRecipe",
-    component: () => import("../views/addRecipeForm.vue")
+    component: () => import("../views/AddRecipeForm.vue")
   },
   {
     path: "/editRecipe/:id",
     name: "EdiitRecipe",
-    component: () => import("../views/editRecipeForm.vue"),
+    component: () => import("../views/EditRecipeForm.vue"),
+    props: true,
+  },
+  {
+    path: "/shoppingList",
+    name: "shoppingList",
+    component: () => import("../views/ShoppingList.vue"),
     props: true,
   },
 ];

@@ -1,12 +1,18 @@
 <template>
   <div id="nav">
+    <shopping-list-count></shopping-list-count>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import ShoppingListCount from "@/components/ShoppingListCount.vue";
+
 export default {
   name: "App",
+  components: {
+    "shopping-list-count": ShoppingListCount,
+  },
   data() {
     return {};
   },
@@ -34,6 +40,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+[v-cloak] {
+  display: none;
 }
 
 #nav {

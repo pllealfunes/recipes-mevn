@@ -47,7 +47,7 @@
 
 <script>
 // @ is an alias to /src
-//import { cart } from "@/common/Cart.js'";
+import { cart } from "@/app.js";
 
 export default {
   name: "",
@@ -61,6 +61,12 @@ export default {
     };
   },
   methods: {
+    addShoppingList(ingrediant) {
+      cart.add(ingrediant, 1);
+      this.$store.commit("SET_CART_COUNT", cart.count());
+      this.showConfirmationMessage = true;
+      setTimeout(() => (this.showConfirmationMessage = false), 2000);
+    },
     deleteRecipe() {
       this.$store.dispatch("deleteRecipe", this.id);
       this.$store.dispatch("getRecipes");
