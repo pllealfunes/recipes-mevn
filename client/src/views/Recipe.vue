@@ -12,14 +12,6 @@
       >
         Added Ingrediant to Shopping List
       </div>
-      <div>
-        <button id="add-favorite" v-if="isFavorite" @click="deleteFavorite()">
-          Remove from Favorites
-        </button>
-        <button id="remove-favorite" v-else @click="addFavorite()">
-          Add to Favorites
-        </button>
-      </div>
       <h2>Ingrediants</h2>
       <ul id="ingrediant-list">
         <li v-for="ingrediant in splitIngrediants" :key="ingrediant">
