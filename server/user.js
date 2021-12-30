@@ -26,14 +26,14 @@ router.post("/", [
     )
         .exists().bail()
         .custom((value, { req }) => value === req.body.password).bail(),
-    check("username").custom(value => {
+    check("name").custom(value => {
         return User.find({
-            username: value
+            name: value
         }).then(user => {
             if (user.length > 0) {
                 // Custom error message and reject
                 // the promise
-                return Promise.reject('Username already in use');
+                return Promise.reject('Name already in use');
             }
         });
     }).bail()

@@ -34,7 +34,11 @@ server.use(express.urlencoded({ extended: true }));
 
 //Use passport and bcryptjs to search for user in database and log them in
 passport.use(
-    new LocalStrategy((email, password, done) => {
+    new LocalStrategy({
+        email: 'email',
+        password: 'password',
+        passReqToCallback: true,
+    }, (email, password, done) => {
         User.findOne({ email: email }, (err, user) => {
             if (err) {
                 return done(err);
