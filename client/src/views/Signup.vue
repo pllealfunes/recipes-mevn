@@ -3,6 +3,11 @@
     <router-link id="home" :to="'/'">Home Page</router-link>
     <div id="registerForm">
       <h2 id="register-title">Register</h2>
+      <div v-if="error">
+        <ul v-for="error in error" :key="error">
+          <li>{{ error }}</li>
+        </ul>
+      </div>
       <div>
         <label
           >Name:
@@ -27,6 +32,15 @@
             v-model="data.password"
         /></label>
       </div>
+      <div>
+        <label
+          >Confirm Password:
+          <input
+            type="password"
+            placeholder="Must be 8 characters"
+            v-model="data.confirmPassword"
+        /></label>
+      </div>
 
       <button @click="registerUser">Register</button>
       <br />
@@ -38,44 +52,36 @@
 </template>
 
 <script>
-import { axios } from "@/app.js";
+//import { axios } from "@/app.js";
 //import Validator from "validatorjs";
 export default {
   data() {
     return {
       data: {
-        name: null,
-        email: null,
-        password: null,
+        name: "",
+        email: "",
+        password: "",
       },
-      errors: null,
+      error: null,
       favorites: [],
     };
   },
   computed: {
-    /*user() {
+    user() {
       return this.$store.state.user;
-    },*/
+    },
   },
   methods: {
-    /*validate() {
-      let validator = new Validator(this.data, {
-        name: "required",
-        email: "required",
-        password: "required",
-      });
-      this.errors = validator.errors.all();
-      return validator.passes();
-    },*/
     registerUser() {
-      axios.post("/signUp", this.data).then((response) => {
-        if (response.data.success) {
-          this.$store.commit("setUser", response.data.user);
-          this.$router.push("/account");
-        } else {
-          this.errors = response.data.errors;
-        }
-      });
+      this.$store
+        .dispatch("register", this.data)
+        .then(() => this.$router.push("/"))
+        .catch((error) => {
+          // error.response can be null
+          if (error.response && error.response.status === 400) {
+            this.error = error.response.data.error;
+          }
+        });
     },
   },
 };

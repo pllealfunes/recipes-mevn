@@ -6,7 +6,9 @@ export default createStore({
   state() {
     return {
       cartCount: 0,
-      recipes: []
+      recipes: [],
+      token: null,
+      user: null,
     }
   },
   mutations: {
@@ -15,9 +17,77 @@ export default createStore({
     },
     SET_RECIPES(state, payload) {
       state.recipes = payload
-    }
+    },
+    auth_request(state) {
+      state.status = 'loading'
+    },
+    auth_success(state, token, user) {
+      state.status = 'success'
+      state.token = token
+      state.user = user
+    },
+    auth_error(state) {
+      state.status = 'error'
+    },
+    logout(state) {
+      state.status = ''
+      state.token = ''
+    },
   },
   actions: {
+    register({ commit }, user) {
+      return new Promise((resolve, reject) => {
+        commit('auth_request')
+        axios({ url: 'http://localhost:3000/api/users', data: user, method: 'POST' })
+          .then(resp => {
+            const token = resp.data.token
+            const user = resp.data.user
+            //localStorage.setItem('token', token)
+            // Add the following line:
+            axios.defaults.headers.common['Authorization'] = token
+            commit('auth_success', token, user)
+            resolve(resp)
+          })
+          .catch(err => {
+            commit('auth_error', err)
+            //localStorage.removeItem('token')
+            reject(err)
+          })
+      })
+    },
+    login({ commit }, user) {
+      return new Promise((resolve, reject) => {
+        commit('auth_request')
+        axios({
+          url: 'http://localhost:3000/api/auth', data: user, method: 'POST', header: {
+            'Content-Type': "application/json"
+          }
+        })
+          .then(resp => {
+            const token = resp.data.token
+            const user = resp.data.user
+            //slocalStorage.setItem('token', token)
+            // Add the following line:
+            axios.defaults.headers.common['Authorization'] = token
+            commit('auth_success', token, user)
+            resolve(resp)
+          })
+          .catch(err => {
+            commit('auth_error')
+            //localStorage.removeItem('token')
+            reject(err)
+            console.log("here" + err);
+          })
+      });
+    },
+    logout({ commit }) {
+      return new Promise((resolve) => {
+        commit('logout')
+        localStorage.removeItem('token')
+        delete axios.defaults.headers.common['Authorization']
+        resolve()
+      })
+    },
     getRecipes({ commit }) {
       axios.get(apiUrl)
         .then(response => response.data)
@@ -26,7 +96,6 @@ export default createStore({
         }).catch(error => {
           console.log(error);
         })
-
     },
     newRecipe(context, recipe) {
       axios.post(apiUrl + "newRecipe", {
@@ -57,7 +126,9 @@ export default createStore({
           return recipe._id == id;
         }, id[0])
       }
-    }
+    },
+    isLoggedIn: state => !!state.token,
+    authStatus: state => state.status,
   },
   modules: {},
 });

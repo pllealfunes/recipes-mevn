@@ -7,6 +7,7 @@
 
 <script>
 import ShoppingListCount from "@/components/ShoppingListCount.vue";
+import axios from "axios";
 
 export default {
   name: "App",
@@ -23,6 +24,15 @@ export default {
   },
   mounted() {
     this.$store.dispatch("getRecipes");
+  },
+  methods: {
+    logout() {
+      axios.post("/").then((response) => {
+        if (response.data.success) {
+          this.$store.commit("setUser", null);
+        }
+      });
+    },
   },
 };
 </script>

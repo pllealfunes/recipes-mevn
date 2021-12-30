@@ -3,6 +3,15 @@ const express = require('express');
 const server = express();
 const cors = require('cors');
 const recipesApi = require('./recipes-api');
+const Users = require('./user');
+const Auth = require('./auth');
+var session = require("express-session");
+var passport = require("passport");
+var LocalStrategy = require("passport-local").Strategy;
+var bcrypt = require('bcryptjs');
+var flash = require('connect-flash');
+
+
 
 server.use(express.json());
 server.use(cors());
@@ -23,7 +32,81 @@ mongoose.connect(process.env.dbURI, {
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
+//Use passport and bcryptjs to search for user in database and log them in
+passport.use(
+    new LocalStrategy((email, password, done) => {
+        User.findOne({ email: email }, (err, user) => {
+            if (err) {
+                return done(err);
+            }
+            if (!user) {
+                console.log('incorrect email')
+                return done(null, false, { message: "Incorrect email" });
+            }
+            bcrypt.compare(password, user.password, (err, res) => {
+                if (res) {
+                    // passwords match! log user in
+                    //done(null, user);
+                    jwt.sign({ user }, process.env.secret, (er, token) => {
+                        res.json({
+                            token,
+                            message: "Login successful"
+                        })
+                    })
+                    done(null, user);
+                } else {
+                    // passwords do not match!
+                    return done(null, false, { message: "Incorrect password" });
+                }
+            });
+        });
+    })
+);
+
+
+//Passport middleware
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+    User.findById(id, function (err, user) {
+        done(err, user);
+    });
+});
+
+//Express session
+server.use(session({ secret: process.env.secret, resave: false, saveUninitialized: true }));
+
+//Passport middleware
+server.use(passport.initialize());
+server.use(passport.session());
+
+server.use(function (req, res, next) {
+    res.locals.currentUser = req.user;
+    next();
+});
+
+server.get("/log-out", (req, res) => {
+    req.logout();
+    res.redirect("/");
+});
+
+//Connect flash
+server.use(flash());
+
+//Global Vars
+server.use(function (req, res, next) {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    next();
+});
+
+//Routes
 server.use('/api/recipes', recipesApi);
+server.use('/api/users', Users);
+server.use('/api/auth', Auth);
 
 server.get("/", (req, res) => {
     res.send("Hello World!");
