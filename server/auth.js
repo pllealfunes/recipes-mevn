@@ -3,7 +3,8 @@ const authRouter = express.Router();
 const passport = require("passport");
 
 authRouter.post('/', passport.authenticate("local", {
-    failureFlash: true
+    failureFlash: true,
+    session: false
 })
 );
 

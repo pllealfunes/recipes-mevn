@@ -5,11 +5,14 @@
     <div id="loginForm">
       <h2 id="login-title">Login</h2>
       <div>
-        <label>Email: <input type="text" v-model="data.email" /></label>
+        <label
+          >Email: <input type="email" name="email" v-model="data.email"
+        /></label>
       </div>
       <div>
         <label
-          >Password: <input type="password" v-model="data.password"
+          >Password:
+          <input type="password" name="password" v-model="data.password"
         /></label>
       </div>
 

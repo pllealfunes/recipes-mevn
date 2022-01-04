@@ -41,7 +41,7 @@ export default createStore({
         axios({ url: 'http://localhost:3000/api/users', data: user, method: 'POST' })
           .then(resp => {
             const token = resp.data.token
-            //const user = user
+            //const user = resp.data.user
             //localStorage.setItem('token', token)
             // Add the following line:
             axios.defaults.headers.common['Authorization'] = token
@@ -63,7 +63,7 @@ export default createStore({
         })
           .then(resp => {
             const token = resp.data.token
-            //const user = user
+            //const user = resp.data.user
             //slocalStorage.setItem('token', token)
             // Add the following line:
             axios.defaults.headers.common['Authorization'] = token
