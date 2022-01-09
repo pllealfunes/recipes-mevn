@@ -3,13 +3,15 @@ const express = require('express');
 const server = express();
 const cors = require('cors');
 const recipesApi = require('./recipes-api');
-const Users = require('./user');
-const Auth = require('./auth');
+var userApi = require('./user');
+var authApi = require('./auth');
+var User = require('./models/userSchema');
 var session = require("express-session");
 var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var bcrypt = require('bcryptjs');
 var flash = require('connect-flash');
+const jwt = require("jsonwebtoken");
 
 
 
@@ -40,10 +42,9 @@ passport.use(
     }, (req, email, password, done) => {
         User.findOne({ email: email }, (err, user) => {
             if (err) {
-                return done(err);
+                console.log(err);
             }
             if (!user) {
-                console.log('incorrect email')
                 return done(null, false, { message: "Unknown Users" });
             }
             bcrypt.compare(password, user.password, (err, res) => {
@@ -109,8 +110,8 @@ server.use(function (req, res, next) {
 
 //Routes
 server.use('/api/recipes', recipesApi);
-server.use('/api/users', Users);
-server.use('/api/auth', Auth);
+server.use('/api/users', userApi);
+server.use('/api/auth', authApi);
 
 server.get("/", (req, res) => {
     res.send("Hello World!");
