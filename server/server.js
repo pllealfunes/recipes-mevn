@@ -34,18 +34,19 @@ mongoose.connect(process.env.dbURI, {
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
+
 //Use passport and bcryptjs to search for user in database and log them in
 passport.use(
     new LocalStrategy({
         usernameField: 'email',
         passReqToCallback: true,
-    }, (req, email, password, done) => {
-        User.findOne({ email: email }, (err, user) => {
+    }, (req, username, password, done) => {
+        User.findOne({ email: username }, (err, user) => {
             if (err) {
                 console.log(err);
             }
             if (!user) {
-                return done(null, false, { message: "Unknown Users" });
+                return done(null, false);
             }
             bcrypt.compare(password, user.password, (err, res) => {
                 if (res) {
@@ -54,14 +55,13 @@ passport.use(
                     jwt.sign({ user }, process.env.secret, (er, token) => {
                         res.json({
                             token,
-                            user,
-                            message: "Login successful"
+                            user
                         })
                     })
                     done(null, user);
                 } else {
                     // passwords do not match!
-                    return done(null, false, { message: "Incorrect password" });
+                    return done(null, false);
                 }
             });
         });

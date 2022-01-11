@@ -38,7 +38,14 @@ export default createStore({
     register({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit('auth_request')
-        axios({ url: 'http://localhost:3000/api/users', data: user, method: 'POST' })
+        axios({
+          url: 'http://localhost:3000/api/users', data: user, method: 'POST', headers: {
+            // 'application/json' is the modern content-type for JSON, but some
+            // older servers may use 'text/json'.
+            // See: http://bit.ly/text-json
+            'content-type': 'application/json'
+          }
+        })
           .then(resp => {
             const token = resp.data.token
             //const user = resp.data.user
@@ -58,11 +65,11 @@ export default createStore({
     login({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit('auth_request')
-        axios.post({ url: 'http://localhost:3000/api/auth', data: user, method: 'POST' })
+        axios({ url: 'http://localhost:3000/api/auth', data: user, method: 'POST' })
           .then(resp => {
             const token = resp.data.token
             //const user = user
-            //slocalStorage.setItem('token', token)
+            //slocalStorage.setItem('token', stoken)
             // Add the following line:
             axios.defaults.headers.common['Authorization'] = token
             commit('auth_success', token, user)
