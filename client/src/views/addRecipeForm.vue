@@ -12,7 +12,16 @@
       </li>
     </ul>
 
-    <div id="addRecipeForm">
+    <form id="addRecipeForm" encType="multipart/form-data">
+      <label for="file"></label>
+      <input
+        id="imageUrl"
+        name="file"
+        ref="file"
+        type="file"
+        @change="selectFile"
+      />
+
       <label for="title"></label>
       <input
         id="title"
@@ -36,7 +45,7 @@
       />
 
       <button id="added-recipe" @click="addRecipe">Delicious!</button>
-    </div>
+    </form>
   </div>
 </template>
 
@@ -47,18 +56,26 @@ export default {
   name: "",
   data() {
     return {
+      file: "",
       errors: null,
       showConfirmationMessage: false,
       recipe: {
         title: "",
         ingrediants: "",
         instructions: "",
+        imageUrl: "",
       },
     };
   },
   methods: {
+    selectFile() {
+      const file = this.$refs.file.files[0];
+      this.file = file;
+    },
     addRecipe() {
-      this.$store.dispatch("newRecipe", this.recipe);
+      const formData = new FormData();
+      imageUrl = formData.append("file", this.file);
+      this.$store.dispatch("newRecipe", this.recipe, imageUrl);
       this.showConfirmationMessage = true;
       this.recipe = "";
       setTimeout(() => (this.showConfirmationMessage = false), 2000);

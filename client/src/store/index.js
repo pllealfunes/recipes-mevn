@@ -39,12 +39,7 @@ export default createStore({
       return new Promise((resolve, reject) => {
         commit('auth_request')
         axios({
-          url: 'http://localhost:3000/api/users', data: user, method: 'POST', headers: {
-            // 'application/json' is the modern content-type for JSON, but some
-            // older servers may use 'text/json'.
-            // See: http://bit.ly/text-json
-            'content-type': 'application/json'
-          }
+          url: 'http://localhost:3000/api/users', data: user, method: 'POST'
         })
           .then(resp => {
             const token = resp.data.token
@@ -100,12 +95,14 @@ export default createStore({
           console.log(error);
         })
     },
-    newRecipe(context, recipe) {
+    newRecipe(context, recipe, image) {
       axios.post(apiUrl + "newRecipe", {
         "title": recipe.title,
         "ingrediants": recipe.ingrediants,
-        "instructions": recipe.instructions
-      })
+        "instructions": recipe.instructions,
+        "imageUrl": image,
+      }
+      )
         .catch((err) => console.log(err.message));
 
     },

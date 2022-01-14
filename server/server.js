@@ -52,13 +52,15 @@ passport.use(
                 if (res) {
                     // passwords match! log user in
                     //done(null, user);
-                    jwt.sign({ user }, process.env.secret, (er, token) => {
-                        res.json({
-                            token,
-                            user
-                        })
-                    })
-                    done(null, user);
+                    //const userJSON = user.toJSON()
+                    let token = jwt.sign({ id: user.id }, process.env.secret, {
+                        expiresIn: 86400 // expires in 24 hours
+                    });
+                    // res.send({ auth: true, "token": token, "user": user });
+                    /*return res.send({
+                    token: token,
+                        message: "Sign in successful",
+                    });*/
                 } else {
                     // passwords do not match!
                     return done(null, false);
