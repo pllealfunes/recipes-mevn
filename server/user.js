@@ -53,13 +53,15 @@ router.post("/", [
             user.save()
                 .then(() => {
                     let token = jwt.sign(
-                        { _id: user._id, email: user.email },
+                        { _id: user._id },
                         process.env.secret,
                         { expiresIn: "5m" });
                     if (err) { next(err) }
                     else {
 
                         res.json({
+                            auth: true,
+                            user: user,
                             token: token,
                             message: "Signup successful",
                         });

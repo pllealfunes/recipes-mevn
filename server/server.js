@@ -48,7 +48,7 @@ passport.use(
             if (!user) {
                 return done(null, false);
             }
-            bcrypt.compare(password, user.password, (err, res) => {
+            bcrypt.compare(password, user.password, (err, req, res) => {
                 if (res) {
                     // passwords match! log user in
                     //done(null, user);
@@ -57,7 +57,9 @@ passport.use(
                         expiresIn: 86400 // expires in 24 hours
                     });
                     // res.send({ auth: true, "token": token, "user": user });
-                    res.json().then({
+                    res.json({
+                        auth: true,
+                        user: user,
                         token: token,
                         message: "Sign in successful",
                     })
