@@ -54,12 +54,12 @@ router.get('/:recipeid', (req, res, next) => {
 // create
 router.post('/:newRecipe', upload.single('file'), (req, res, next) => {
     console.log(req.file);
-    //let path = "/static/img/" + req.file.filename;
+    let path = "/public/images/" + req.file.filename;
     const recipe = {
         title: req.body.title,
         ingrediants: req.body.ingrediants,
         instructions: req.body.instructions,
-        imageUrl: req.body.imageUrl
+        imageUrl: path
     }
     RecipeService.create(recipe)
         .then((recipe) => {

@@ -95,12 +95,12 @@ export default createStore({
           console.log(error);
         })
     },
-    newRecipe(context, recipe, image) {
+    newRecipe(context, recipe) {
       axios.post(apiUrl + "newRecipe", {
         "title": recipe.title,
         "ingrediants": recipe.ingrediants,
         "instructions": recipe.instructions,
-        "imageUrl": image,
+        "imageUrl": recipe.imageUrl,
       }
       )
         .catch((err) => console.log(err.message));

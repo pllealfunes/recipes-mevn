@@ -57,10 +57,10 @@ passport.use(
                         expiresIn: 86400 // expires in 24 hours
                     });
                     // res.send({ auth: true, "token": token, "user": user });
-                    /*return res.send({
-                    token: token,
+                    res.json().then({
+                        token: token,
                         message: "Sign in successful",
-                    });*/
+                    })
                 } else {
                     // passwords do not match!
                     return done(null, false);

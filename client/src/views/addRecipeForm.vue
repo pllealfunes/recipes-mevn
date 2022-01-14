@@ -63,7 +63,6 @@ export default {
         title: "",
         ingrediants: "",
         instructions: "",
-        imageUrl: "",
       },
     };
   },
@@ -73,8 +72,8 @@ export default {
       this.file = file;
     },
     addRecipe() {
-      const formData = new FormData();
-      imageUrl = formData.append("file", this.file);
+      let formData = new FormData();
+      let imageUrl = formData.append("file", this.file);
       this.$store.dispatch("newRecipe", this.recipe, imageUrl);
       this.showConfirmationMessage = true;
       this.recipe = "";
