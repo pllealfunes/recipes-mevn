@@ -1,8 +1,18 @@
 <template>
-  <div id="nav">
-    <shopping-list-count></shopping-list-count>
+  <header>
+    <nav id="nav">
+      <div id="title-container">
+        <div id="site-title">Recipes</div>
+      </div>
+      <div id="links-container">
+        <router-link :to="'/addRecipe'">
+          <button id="addRecipeBtn">Add Recipe</button>
+        </router-link>
+        <shopping-list-count></shopping-list-count>
+      </div>
+    </nav>
     <router-view></router-view>
-  </div>
+  </header>
 </template>
 
 <script>
@@ -56,7 +66,7 @@ export default {
   display: none;
 }
 
-#nav {
+div {
   padding: 30px;
 
   a {
@@ -65,6 +75,32 @@ export default {
 
     &.router-link-exact-active {
       color: #42b983;
+    }
+  }
+}
+
+header {
+  width: 100%;
+}
+
+#nav {
+  border: 1px orange solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  #links-container {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    #addRecipeBtn {
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.4rem;
+      font-size: 1rem;
+      font-weight: bold;
+      background-color: #ffab91;
     }
   }
 }

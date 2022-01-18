@@ -31,5 +31,16 @@ export default {
   },
 };
 </script>
-© 2021 GitHub, Inc.
-Terms
+
+<style scoped lang="scss">
+#list-count {
+  width: 50px;
+  height: 50px;
+  border-radius: 0.5rem;
+  padding: 0.4rem;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #ffab91;
+  text-decoration: none;
+}
+</style>

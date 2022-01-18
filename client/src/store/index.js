@@ -97,14 +97,12 @@ export default createStore({
     },
     newRecipe(context, recipe) {
       axios.post(apiUrl + "newRecipe", {
-        "title": recipe.title,
-        "ingrediants": recipe.ingrediants,
-        "instructions": recipe.instructions,
-        "imageUrl": recipe.imageUrl,
-      }
-      )
+        "title": recipe.get("title"),
+        "ingrediants": recipe.get("ingrediants"),
+        "instructions": recipe.get("instructions"),
+        "imageUrl": recipe.get("imageUrl")
+      })
         .catch((err) => console.log(err.message));
-
     },
     editRecipe(context, recipe) {
       axios.put(apiUrl + "updateRecipe/" + recipe._id, {

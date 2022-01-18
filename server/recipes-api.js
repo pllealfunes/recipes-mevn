@@ -10,7 +10,7 @@ const upload = multer({
 
 router.use((req, res, next) => {
     res.set({
-        'Content-Type': 'application/json',
+        'Content-type': 'application/json',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type,Access-Control-Allow-Headers',
@@ -52,24 +52,9 @@ router.get('/:recipeid', (req, res, next) => {
 });
 
 // create
-router.post('/:newRecipe', upload.single('file'), (req, res, next) => {
-    console.log(req.file);
-    let path = "/public/images/" + req.file.filename;
-    const recipe = {
-        title: req.body.title,
-        ingrediants: req.body.ingrediants,
-        instructions: req.body.instructions,
-        imageUrl: path
-    }
-    RecipeService.create(recipe)
-        .then((recipe) => {
-            res.status(200);
-            res.send(JSON.stringify(recipe));
-            console.log(`Added recipe ${recipe}`);
-        }).catch((err) => {
-            res.status(404);
-            res.send();
-        });
+router.post('/:newRecipe', upload.single("imageUrl"), (req, res, next) => {
+    console.log(imageUrl);
+
 });
 
 //update

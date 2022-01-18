@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const server = express();
+var path = require('path');
 const cors = require('cors');
 const recipesApi = require('./recipes-api');
 var userApi = require('./user');
@@ -56,13 +57,9 @@ passport.use(
                     let token = jwt.sign({ id: user.id }, process.env.secret, {
                         expiresIn: 86400 // expires in 24 hours
                     });
+                    console.log(res);
                     // res.send({ auth: true, "token": token, "user": user });
-                    res.json({
-                        auth: true,
-                        user: user,
-                        token: token,
-                        message: "Sign in successful",
-                    })
+
                 } else {
                     // passwords do not match!
                     return done(null, false);
@@ -112,6 +109,7 @@ server.use(function (req, res, next) {
     next();
 });
 
+//server.use('/public', express.static('public'));
 //Routes
 server.use('/api/recipes', recipesApi);
 server.use('/api/users', userApi);

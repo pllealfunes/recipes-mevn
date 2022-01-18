@@ -12,11 +12,15 @@
       </li>
     </ul>
 
-    <form id="addRecipeForm" encType="multipart/form-data">
-      <label for="file"></label>
+    <form
+      id="addRecipeForm"
+      enctype="multipart/form-data"
+      @submit.prevent="addRecipe"
+    >
+      <label for="imageUrl"></label>
       <input
         id="imageUrl"
-        name="file"
+        name="imageUrl"
         ref="file"
         type="file"
         @change="selectFile"
@@ -27,24 +31,24 @@
         id="title"
         type="text"
         placeholder="Recipe Title"
-        v-model="recipe.title"
+        v-model="title"
       />
 
       <label for="ingrediants"></label>
       <textarea
         id="ingrediants"
         placeholder="ex: Ingrediant, Ingrediant"
-        v-model="recipe.ingrediants"
+        v-model="ingrediants"
       />
 
       <label for="instructions"></label>
       <textarea
         id="instructions"
         placeholder="ex: 1. Instrcution, 2. Instruction"
-        v-model="recipe.instructions"
+        v-model="instructions"
       />
 
-      <button id="added-recipe" @click="addRecipe">Delicious!</button>
+      <button id="added-recipe">Delicious!</button>
     </form>
   </div>
 </template>
@@ -59,22 +63,23 @@ export default {
       file: "",
       errors: null,
       showConfirmationMessage: false,
-      recipe: {
-        title: "",
-        ingrediants: "",
-        instructions: "",
-      },
+      title: "",
+      ingrediants: "",
+      instructions: "",
+      imageUrl: "",
     };
   },
   methods: {
     selectFile() {
-      const file = this.$refs.file.files[0];
-      this.file = file;
+      this.imageUrl = this.$refs.file.files[0];
     },
     addRecipe() {
-      let formData = new FormData();
-      let imageUrl = formData.append("file", this.file);
-      this.$store.dispatch("newRecipe", this.recipe, imageUrl);
+      const formData = new FormData();
+      formData.append("title", this.title);
+      formData.append("ingrediants", this.ingrediants);
+      formData.append("instructions", this.instructions);
+      formData.append("imageUrl", this.imageUrl);
+      this.$store.dispatch("newRecipe", formData);
       this.showConfirmationMessage = true;
       this.recipe = "";
       setTimeout(() => (this.showConfirmationMessage = false), 2000);

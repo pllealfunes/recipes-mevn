@@ -1,11 +1,10 @@
 <template>
-  <div class="hello">
-    <h1>Recipes</h1>
-    <router-link :to="'/addRecipe'">
-      <button>Add Recipe</button>
-    </router-link>
-    <ul v-for="recipe in recipes" :key="recipe._id">
+  <div>
+    <ul>
       <router-link
+        id="recipe-links"
+        v-for="recipe in recipes"
+        :key="recipe._id"
         :to="{ name: 'Recipe', params: { id: recipe._id } }"
         :recipe="recipe"
         ><li>{{ recipe.title }}</li></router-link
@@ -28,3 +27,25 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  li {
+    width: 200px;
+    height: 150px;
+    list-style: none;
+    border: 1px orange solid;
+    margin: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-grow: 1;
+  }
+}
+</style>

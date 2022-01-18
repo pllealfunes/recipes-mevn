@@ -5,6 +5,9 @@
       <router-link :to="'/editRecipe/' + recipe._id">
         <button>Edit Recipe</button>
       </router-link>
+      <div v-if="recipe.imageUrl">
+        <div>{{ recipe.imageUrl }}</div>
+      </div>
       <div
         id="confirmation-message"
         data-test="test-add-confirmation"
@@ -89,3 +92,6 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+</style>
