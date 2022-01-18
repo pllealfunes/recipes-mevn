@@ -4,7 +4,8 @@ const multer = require('multer');
 const recipesController = require('./recipesController');
 const RecipeService = recipesController.RecipeService;
 const upload = multer({
-    dest: "./uploads"
+    storage: recipesController.storage,
+    fileFilter: recipesController.imageFilter
 });
 
 
@@ -52,9 +53,24 @@ router.get('/:recipeid', (req, res, next) => {
 });
 
 // create
-router.post('/:newRecipe', upload.single("imageUrl"), (req, res, next) => {
-    console.log(imageUrl);
-
+router.post('/:newRecipe', upload.single('imageUrl'), (req, res, next) => {
+    console.log(req.body);
+    const recipe = {
+        title: req.body.title,
+        ingrediants: req.body.ingrediants,
+        instructions: req.body.instructions,
+        imageUrl: req.body.imageUrl
+    }
+    RecipeService.create(recipe)
+        .then((recipe) => {
+            res.status(200);
+            res.set({ 'Content-type': 'multipart/form-data' });
+            console.log(`Added recipe ${recipe}`);
+        }).catch((err) => {
+            console.log(err);
+            res.status(404);
+            res.send();
+        });
 });
 
 //update
