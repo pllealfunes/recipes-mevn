@@ -34,6 +34,7 @@ mongoose.connect(process.env.dbURI, {
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
+server.use('/static', express.static(path.join(__dirname, 'public')));
 
 
 //Use passport and bcryptjs to search for user in database and log them in

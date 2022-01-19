@@ -6,29 +6,19 @@
       Successfully Added Recipe
     </div>
 
-    <ul id="create-errors" v-if="errors">
-      <li class="error" v-for="(error, index) in errors" :key="index">
-        {{ error.toString() }}
-      </li>
-    </ul>
-
     <form
       id="addRecipeForm"
+      ref="newRecipeForm"
       enctype="multipart/form-data"
       @submit.prevent="addRecipe"
     >
       <label for="imageUrl"></label>
-      <input
-        id="imageUrl"
-        name="imageUrl"
-        ref="file"
-        type="file"
-        @change="selectFile"
-      />
+      <input id="imageUrl" name="imageUrl" ref="file" type="file" />
 
       <label for="title"></label>
       <input
         id="title"
+        name="title"
         type="text"
         placeholder="Recipe Title"
         v-model="title"
@@ -37,6 +27,7 @@
       <label for="ingrediants"></label>
       <textarea
         id="ingrediants"
+        name="ingrediants"
         placeholder="ex: Ingrediant, Ingrediant"
         v-model="ingrediants"
       />
@@ -44,6 +35,7 @@
       <label for="instructions"></label>
       <textarea
         id="instructions"
+        name="instructions"
         placeholder="ex: 1. Instrcution, 2. Instruction"
         v-model="instructions"
       />
@@ -60,7 +52,6 @@ export default {
   name: "",
   data() {
     return {
-      file: "",
       errors: null,
       showConfirmationMessage: false,
       title: "",
@@ -70,18 +61,11 @@ export default {
     };
   },
   methods: {
-    selectFile() {
-      this.imageUrl = this.$refs.file.files[0];
-    },
     addRecipe() {
-      const formData = new FormData();
-      formData.append("title", this.title);
-      formData.append("ingrediants", this.ingrediants);
-      formData.append("instructions", this.instructions);
-      formData.append("imageUrl", this.imageUrl);
+      const formData = new FormData(this.$refs.newRecipeForm);
       this.$store.dispatch("newRecipe", formData);
       this.showConfirmationMessage = true;
-      this.recipe = "";
+      //this.recipe = "";
       setTimeout(() => (this.showConfirmationMessage = false), 2000);
     },
   },

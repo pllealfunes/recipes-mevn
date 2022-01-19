@@ -6,7 +6,7 @@
         <button>Edit Recipe</button>
       </router-link>
       <div v-if="recipe.imageUrl">
-        <div>{{ recipe.imageUrl }}</div>
+        <img v-bind:src="'./' + recipe.imageUrl" alt="" />
       </div>
       <div
         id="confirmation-message"
