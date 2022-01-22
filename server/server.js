@@ -17,7 +17,14 @@ const jwt = require("jsonwebtoken");
 
 
 server.use(express.json());
-server.use(cors());
+
+const corsOptions = {
+    origin: 'http://localhost:8080',
+    credentials: true,            //access-control-allow-credentials:true
+    optionSuccessStatus: 200
+}
+
+server.use(cors(corsOptions));
 
 const mongoose = require('mongoose');
 
@@ -34,7 +41,7 @@ mongoose.connect(process.env.dbURI, {
 
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
-server.use('/static', express.static(path.join(__dirname, 'public')));
+server.use('/public', express.static(path.join(__dirname, 'public')));
 
 
 //Use passport and bcryptjs to search for user in database and log them in

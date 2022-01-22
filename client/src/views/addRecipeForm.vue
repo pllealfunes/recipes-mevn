@@ -6,6 +6,16 @@
       Successfully Added Recipe
     </div>
 
+    <div id="error-message" v-if="error">
+      There was an issue with the entry please try again.
+    </div>
+
+    <ul id="create-errors" v-if="errors">
+      <li class="error" v-for="(error, index) in errors" :key="index">
+        {{ error.toString() }}
+      </li>
+    </ul>
+
     <form
       id="addRecipeForm"
       ref="newRecipeForm"
@@ -21,7 +31,7 @@
         name="title"
         type="text"
         placeholder="Recipe Title"
-        v-model="title"
+        v-model="recipe.title"
       />
 
       <label for="ingrediants"></label>
@@ -29,7 +39,7 @@
         id="ingrediants"
         name="ingrediants"
         placeholder="ex: Ingrediant, Ingrediant"
-        v-model="ingrediants"
+        v-model="recipe.ingrediants"
       />
 
       <label for="instructions"></label>
@@ -37,7 +47,7 @@
         id="instructions"
         name="instructions"
         placeholder="ex: 1. Instrcution, 2. Instruction"
-        v-model="instructions"
+        v-model="recipe.instructions"
       />
 
       <button id="added-recipe">Delicious!</button>
@@ -47,26 +57,52 @@
 
 <script>
 // @ is an alias to /src
+import { axios } from "@/app.js";
 
 export default {
   name: "",
   data() {
     return {
-      errors: null,
+      apiUrl: "http://localhost:3000/api/recipes/",
+      error: false,
+      errors: [],
       showConfirmationMessage: false,
-      title: "",
-      ingrediants: "",
-      instructions: "",
-      imageUrl: "",
+      recipe: {
+        title: "",
+        ingrediants: "",
+        instructions: "",
+        imageUrl: "",
+      },
     };
   },
   methods: {
     addRecipe() {
       const formData = new FormData(this.$refs.newRecipeForm);
-      this.$store.dispatch("newRecipe", formData);
-      this.showConfirmationMessage = true;
-      //this.recipe = "";
-      setTimeout(() => (this.showConfirmationMessage = false), 2000);
+      /*this.$store.dispatch("newRecipe", formData).catch(() => {
+        this.error = true;
+      });
+      if (this.error == false) {
+        this.error = false;
+        this.$store.dispatch("getRecipes");
+        this.showConfirmationMessage = true;
+        this.recipe = "";
+        setTimeout(() => (this.showConfirmationMessage = false), 2000);
+      }*/
+      axios
+        .post(this.apiUrl + "newRecipe", formData, {
+          "Content-Type": "multipart/form-data",
+        })
+        .then(() => {
+          this.error = false;
+          this.$store.dispatch("getRecipes");
+          this.showConfirmationMessage = true;
+          this.recipe = "";
+          this.$refs.file.value = null;
+          setTimeout(() => (this.showConfirmationMessage = false), 2000);
+        })
+        .catch(() => {
+          this.error = true;
+        });
     },
   },
 };

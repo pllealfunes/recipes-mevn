@@ -95,10 +95,6 @@ export default createStore({
           console.log(error);
         })
     },
-    newRecipe(context, recipe) {
-      axios.post(apiUrl + "newRecipe", recipe, { "Content-Type": "multipart/form-data" })
-        .catch((err) => console.log(err.message));
-    },
     editRecipe(context, recipe) {
       axios.put(apiUrl + "updateRecipe/" + recipe._id, {
         "title": recipe.title,

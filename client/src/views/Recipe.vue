@@ -6,7 +6,7 @@
         <button>Edit Recipe</button>
       </router-link>
       <div v-if="recipe.imageUrl">
-        <img v-bind:src="'./' + recipe.imageUrl" alt="" />
+        <img :src="'http://localhost:3000' + recipe.imageUrl" alt="" />
       </div>
       <div
         id="confirmation-message"
@@ -94,4 +94,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+img {
+  width: 20rem;
+  height: 20rem;
+}
 </style>

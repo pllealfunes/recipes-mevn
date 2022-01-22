@@ -12,7 +12,7 @@ const upload = multer({
 router.use((req, res, next) => {
     res.set({
         'Content-type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': 'http://localhost:8080 ',
         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type,Access-Control-Allow-Headers',
     });
@@ -54,23 +54,44 @@ router.get('/:recipeid', (req, res, next) => {
 
 // create
 router.post('/:newRecipe', upload.single('imageUrl'), (req, res, next) => {
-    const path = "/public/images/" + req.file.filename;
-    const recipe = {
-        title: req.body.title,
-        ingrediants: req.body.ingrediants,
-        instructions: req.body.instructions,
-        imageUrl: path
+    if (req.file === undefined) {
+        const recipe = {
+            title: req.body.title,
+            ingrediants: req.body.ingrediants,
+            instructions: req.body.instructions,
+        }
+        RecipeService.create(recipe)
+            .then((recipe) => {
+                res.status(200);
+                res.set({ 'Content-type': 'multipart/form-data' });
+                console.log(`Added recipe ${recipe}`);
+                res.send({ _id: recipe.id });
+            }).catch(() => {
+                //console.log(err);
+                res.status(404).send("There was an issue with the entry please try again");
+                res.send();
+            });
+    } else {
+        const path = "/public/images/" + req.file.filename;
+        const recipe = {
+            title: req.body.title,
+            ingrediants: req.body.ingrediants,
+            instructions: req.body.instructions,
+            imageUrl: path
+        }
+        RecipeService.create(recipe)
+            .then((recipe) => {
+                res.status(200);
+                res.set({ 'Content-type': 'multipart/form-data' });
+                console.log(`Added recipe ${recipe}`);
+                res.send({ _id: recipe.id });
+            }).catch(() => {
+                //console.log(err);
+                recipe.imageUrl = '';
+                res.status(404).send("There was an issue with the entry please try again");
+                res.send();
+            });
     }
-    RecipeService.create(recipe)
-        .then((recipe) => {
-            res.status(200);
-            res.set({ 'Content-type': 'multipart/form-data' });
-            console.log(`Added recipe ${recipe}`);
-        }).catch((err) => {
-            console.log(err);
-            res.status(404);
-            res.send();
-        });
 });
 
 //update
