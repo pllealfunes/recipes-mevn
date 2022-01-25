@@ -8,51 +8,99 @@
     <div id="confirmation-message" v-if="showConfirmationMessage">
       Successfully Edited Recipe
     </div>
-    <div v-if="recipe" id="editRecipeForm">
-      <label for="title"></label>
-      <input
-        id="title"
-        type="text"
-        placeholder="New Recipe"
-        v-model="recipe.title"
-      />
 
-      <label for="ingrediants"></label>
-      <textarea
-        id="ingrediants"
-        placeholder="ex: Ingrediant, Ingrediant"
-        v-model="recipe.ingrediants"
-      />
+    {{ recipe }}
 
-      <label for="instructions"></label>
-      <textarea
-        id="instructions"
-        placeholder="ex: 1. Instrcution, 2. Instruction"
-        v-model="recipe.instructions"
-      />
-      <button data-test="test-edit-button" id="edit-recipe" @click="editRecipe">
-        Edit Recipe
-      </button>
+    <div id="error-message" v-if="errorMessage">
+      There was an issue with the entry please try again.
+    </div>
+
+    <div v-if="recipe">
+      <div v-if="recipe.imageUrl">
+        <img :src="'http://localhost:3000' + recipe.imageUrl" alt="" />
+        <button @click="deletePhoto">
+          <i class="fas fa-minus-circle delete-photo"></i>
+        </button>
+      </div>
+
+      <form
+        id="editRecipeForm"
+        ref="editRecipeForm"
+        enctype="multipart/form-data"
+        @submit.prevent="editRecipe"
+      >
+        <label for="imageUrl"></label>
+        <input id="imageUrl" name="imageUrl" ref="file" type="file" />
+
+        <label for="title"></label>
+        <input
+          id="title"
+          type="text"
+          placeholder="New Recipe"
+          v-model="recipe.title"
+        />
+
+        <label for="ingrediants"></label>
+        <textarea
+          id="ingrediants"
+          placeholder="ex: Ingrediant, Ingrediant"
+          v-model="recipe.ingrediants"
+        />
+
+        <label for="instructions"></label>
+        <textarea
+          id="instructions"
+          placeholder="ex: 1. Instrcution, 2. Instruction"
+          v-model="recipe.instructions"
+        />
+        <button id="edit-recipe">Edit Recipe</button>
+      </form>
     </div>
   </div>
 </template>
 
 <script>
+import { axios } from "@/app.js";
+
 export default {
   props: ["id"],
-  data: function () {
+  data() {
     return {
+      apiUrl: "http://localhost:3000/api/recipes/",
       title: null,
       ingrediants: null,
       instructions: null,
+      imageUrl: null,
       showConfirmationMessage: false,
+      errorMessage: false,
     };
   },
   methods: {
     editRecipe() {
-      this.$store.dispatch("editRecipe", this.recipe);
-      this.showConfirmationMessage = true;
-      setTimeout(() => (this.showConfirmationMessage = false), 2000);
+      axios
+        .put(this.apiUrl + "updateRecipe/" + this.id, this.recipe)
+        .then(() => {
+          this.errorMessage = false;
+          this.$store.dispatch("getRecipes");
+          this.showConfirmationMessage = true;
+          setTimeout(() => (this.showConfirmationMessage = false), 2000);
+        })
+        .catch(() => {
+          this.errorMessage = true;
+        });
+    },
+    deletePhoto() {
+      axios
+        .put(this.apiUrl + "deleteImage/" + this.id, this.recipe)
+        .then(() => {
+          this.errorMessage = false;
+          this.showConfirmationMessage = true;
+          setTimeout(() => (this.showConfirmationMessage = false), 2000);
+          this.$router.push({ path: `'/editRecipe/' + ${this.recipe._id}` });
+        })
+        .catch(() => {
+          this.errorMessage = true;
+        });
     },
   },
   computed: {
@@ -72,5 +120,19 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+img {
+  width: 20rem;
+  height: 20rem;
+}
+
+button {
+  border: none;
+  background-color: #fff;
+  cursor: pointer;
+  .delete-photo {
+    font-size: 2rem;
+  }
 }
 </style>

@@ -6,7 +6,7 @@
       Successfully Added Recipe
     </div>
 
-    <div id="error-message" v-if="error">
+    <div id="error-message" v-if="errorMessage">
       There was an issue with the entry please try again.
     </div>
 
@@ -60,11 +60,10 @@
 import { axios } from "@/app.js";
 
 export default {
-  name: "",
   data() {
     return {
       apiUrl: "http://localhost:3000/api/recipes/",
-      error: false,
+      errorMessage: false,
       errors: [],
       showConfirmationMessage: false,
       recipe: {
@@ -78,22 +77,12 @@ export default {
   methods: {
     addRecipe() {
       const formData = new FormData(this.$refs.newRecipeForm);
-      /*this.$store.dispatch("newRecipe", formData).catch(() => {
-        this.error = true;
-      });
-      if (this.error == false) {
-        this.error = false;
-        this.$store.dispatch("getRecipes");
-        this.showConfirmationMessage = true;
-        this.recipe = "";
-        setTimeout(() => (this.showConfirmationMessage = false), 2000);
-      }*/
       axios
         .post(this.apiUrl + "newRecipe", formData, {
           "Content-Type": "multipart/form-data",
         })
         .then(() => {
-          this.error = false;
+          this.errorMessage = false;
           this.$store.dispatch("getRecipes");
           this.showConfirmationMessage = true;
           this.recipe = "";
@@ -101,7 +90,7 @@ export default {
           setTimeout(() => (this.showConfirmationMessage = false), 2000);
         })
         .catch(() => {
-          this.error = true;
+          this.errorMessage = true;
         });
     },
   },

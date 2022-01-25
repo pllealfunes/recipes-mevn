@@ -95,18 +95,6 @@ export default createStore({
           console.log(error);
         })
     },
-    editRecipe(context, recipe) {
-      axios.put(apiUrl + "updateRecipe/" + recipe._id, {
-        "title": recipe.title,
-        "ingrediants": recipe.ingrediants,
-        "instructions": recipe.instructions
-      })
-        .catch((err) => console.log(err.message));
-    },
-    deleteRecipe(context, id) {
-      axios.delete(apiUrl + id)
-        .catch((err) => console.log(err.message));
-    },
   },
   getters: {
     getRecipeById(state) {

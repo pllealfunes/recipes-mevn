@@ -5,6 +5,11 @@
       <router-link :to="'/editRecipe/' + recipe._id">
         <button>Edit Recipe</button>
       </router-link>
+      <ul id="create-errors" v-if="errors">
+        <li class="error" v-for="(error, index) in errors" :key="index">
+          {{ error.toString() }}
+        </li>
+      </ul>
       <div v-if="recipe.imageUrl">
         <img :src="'http://localhost:3000' + recipe.imageUrl" alt="" />
       </div>
@@ -42,6 +47,7 @@
 
 <script>
 // @ is an alias to /src
+import { axios } from "@/app.js";
 import { cart } from "@/app.js";
 
 export default {
@@ -49,23 +55,30 @@ export default {
   props: ["id"],
   data: function () {
     return {
+      apiUrl: "http://localhost:3000/api/recipes/",
       showConfirmationMessage: false,
       items: [],
+      errors: null,
       newIngrediant: null,
       isFavorite: false,
     };
   },
   methods: {
+    deleteRecipe() {
+      axios.delete(this.apiUrl + this.id).then((response) => {
+        if (response.data.errors) {
+          this.errors = response.data.errors;
+        } else {
+          this.$store.dispatch("getRecipes");
+          this.$router.push({ path: "/" });
+        }
+      });
+    },
     addShoppingList(ingrediant) {
       cart.add(ingrediant, 1);
       this.$store.commit("SET_CART_COUNT", cart.count());
       this.showConfirmationMessage = true;
       setTimeout(() => (this.showConfirmationMessage = false), 2000);
-    },
-    deleteRecipe() {
-      this.$store.dispatch("deleteRecipe", this.id);
-      this.$store.dispatch("getRecipes");
-      this.$router.push({ path: "/" });
     },
     getFavoriteDeatils() {
       this.$store.dsipatch("getFavoriteDeatils");

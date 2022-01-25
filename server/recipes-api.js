@@ -96,21 +96,21 @@ router.post('/:newRecipe', upload.single('imageUrl'), (req, res, next) => {
 
 //update
 router.put('/updateRecipe/:recipeid', (req, res, next) => {
-    let data = req.body;
-    RecipeService.update(req.params.recipeid, data)
+    console.log(req.body);
+    const recipe = req.body;
+    RecipeService.update(req.params.recipeid, recipe)
         .then((updateRecipe) => {
             res.status(200);
             res.json(updateRecipe);
             console.log(`Updated recipe: ${updateRecipe}`);
         }).catch((err) => {
-            res.status(404);
+            res.status(404).send("There was an issue with the entry please try again");
             res.end();
         });
-
 });
 
 
-//  delete
+//  delete recipe
 router.delete('/:recipeid', (req, res, next) => {
     RecipeService.delete(req.params.recipeid)
         .then((recipe) => {
@@ -120,6 +120,23 @@ router.delete('/:recipeid', (req, res, next) => {
         }).catch((err) => {
             res.status(404);
             res.end();
+        });
+});
+
+router.put('/deleteImage/:recipeId', (req, res, next) => {
+    const image = req.body.imageUrl;
+    const recipe = {
+        "imageUrl": ""
+    }
+    RecipeService.update(req.params.recipeId, recipe)
+        .then((deleteImage) => {
+            fs.unlinkSync(image)
+            res.status(200);
+            res.json(deleteImage);
+            console.log(`Removed ${image}`);
+        }).catch((err) => {
+            res.status(404);
+            res.send();
         });
 });
 
