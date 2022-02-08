@@ -10,12 +10,6 @@
       There was an issue with the entry please try again.
     </div>
 
-    <ul id="create-errors" v-if="errors">
-      <li class="error" v-for="(error, index) in errors" :key="index">
-        {{ error.toString() }}
-      </li>
-    </ul>
-
     <form
       id="addRecipeForm"
       ref="newRecipeForm"

@@ -9,12 +9,10 @@
       Successfully Edited Recipe
     </div>
 
-    {{ recipe }}
-
     <div id="error-message" v-if="errorMessage">
       There was an issue with the entry please try again.
     </div>
-
+    {{ recipe }}
     <div v-if="recipe">
       <div v-if="recipe.imageUrl">
         <img :src="'http://localhost:3000' + recipe.imageUrl" alt="" />
@@ -23,20 +21,31 @@
         </button>
       </div>
 
-      <form
-        id="editRecipeForm"
-        ref="editRecipeForm"
-        enctype="multipart/form-data"
-        @submit.prevent="editRecipe"
-      >
-        <label for="imageUrl"></label>
-        <input id="imageUrl" name="imageUrl" ref="file" type="file" />
+      <div v-else>
+        <button @click="addPhotoForm">
+          <i class="fas fa-plus-circle add-photo"></i>
+        </button>
+      </div>
 
+      <div v-if="photoForm">
+        <form
+          id="newPhotoForm"
+          ref="newPhoto"
+          enctype="multipart/form-data"
+          @submit.prevent="addNewPhoto"
+        >
+          <label for="imageUrl"></label>
+          <input id="imageUrl" name="imageUrl" ref="file" type="file" />
+          <button id="add-photo">Add Photo</button>
+        </form>
+      </div>
+
+      <form id="editRecipeForm" @submit.prevent="editRecipe">
         <label for="title"></label>
         <input
           id="title"
           type="text"
-          placeholder="New Recipe"
+          placeholder="Title"
           v-model="recipe.title"
         />
 
@@ -73,6 +82,7 @@ export default {
       imageUrl: null,
       showConfirmationMessage: false,
       errorMessage: false,
+      photoForm: false,
     };
   },
   methods: {
@@ -94,9 +104,31 @@ export default {
         .put(this.apiUrl + "deleteImage/" + this.id, this.recipe)
         .then(() => {
           this.errorMessage = false;
+          this.$store.dispatch("getRecipes");
           this.showConfirmationMessage = true;
+          //this.photoForm = true;
           setTimeout(() => (this.showConfirmationMessage = false), 2000);
-          this.$router.push({ path: `'/editRecipe/' + ${this.recipe._id}` });
+          //this.$router.push({ path: `'/editRecipe/' + ${this.recipe._id}` });
+        })
+        .catch(() => {
+          this.errorMessage = true;
+        });
+    },
+    addPhotoForm() {
+      this.photoForm = true;
+    },
+    addNewPhoto() {
+      const formData = new FormData(this.$refs.newPhoto);
+      axios
+        .put(this.apiUrl + "updatePhoto/" + this.id, formData, {
+          "Content-Type": "multipart/form-data",
+        })
+        .then(() => {
+          this.errorMessage = false;
+          this.$store.dispatch("getRecipes");
+          this.showConfirmationMessage = true;
+          this.photoForm = false;
+          setTimeout(() => (this.showConfirmationMessage = false), 2000);
         })
         .catch(() => {
           this.errorMessage = true;
@@ -131,7 +163,8 @@ button {
   border: none;
   background-color: #fff;
   cursor: pointer;
-  .delete-photo {
+  .delete-photo,
+  .add-photo {
     font-size: 2rem;
   }
 }

@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 var express = require('express');
 var router = express.Router();
 const multer = require('multer');
@@ -87,6 +89,7 @@ router.post('/:newRecipe', upload.single('imageUrl'), (req, res, next) => {
                 res.send({ _id: recipe.id });
             }).catch(() => {
                 //console.log(err);
+                fs.unlinkSync(`.${req.body.imageUrl}`);
                 recipe.imageUrl = '';
                 res.status(404).send("There was an issue with the entry please try again");
                 res.send();
@@ -102,8 +105,9 @@ router.put('/updateRecipe/:recipeid', (req, res, next) => {
         .then((updateRecipe) => {
             res.status(200);
             res.json(updateRecipe);
+            //res.send({ _id: recipe.id });
             console.log(`Updated recipe: ${updateRecipe}`);
-        }).catch((err) => {
+        }).catch(() => {
             res.status(404).send("There was an issue with the entry please try again");
             res.end();
         });
@@ -124,19 +128,35 @@ router.delete('/:recipeid', (req, res, next) => {
 });
 
 router.put('/deleteImage/:recipeId', (req, res, next) => {
-    const image = req.body.imageUrl;
-    const recipe = {
-        "imageUrl": ""
+    fs.unlinkSync(`.${req.body.imageUrl}`);
+    let recipe = {
+        imageUrl: undefined
     }
     RecipeService.update(req.params.recipeId, recipe)
         .then((deleteImage) => {
-            fs.unlinkSync(image)
+            console.log(image);
             res.status(200);
             res.json(deleteImage);
-            console.log(`Removed ${image}`);
+            //res.send({ _id: recipe.id });
         }).catch((err) => {
-            res.status(404);
+            res.status(404).send("There was an issue with the entry please try again");
             res.send();
+        });
+});
+
+router.put('/updatePhoto/:recipeId', upload.single('imageUrl'), (req, res, next) => {
+    const path = "/public/images/" + req.file.filename;
+    let recipe = {
+        imageUrl: path,
+    }
+    RecipeService.update(req.params.recipeId, recipe)
+        .then((updatePhoto) => {
+            console.log(updatePhoto);
+            res.status(200);
+            res.json(updatePhoto);
+        }).catch(() => {
+            res.status(404).send("There was an issue with the entry please try again");
+            res.end();
         });
 });
 
