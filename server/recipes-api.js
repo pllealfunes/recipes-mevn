@@ -13,10 +13,10 @@ const upload = multer({
 
 router.use((req, res, next) => {
     res.set({
-        'Content-type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:8080 ',
+        'Access-Control-Allow-Origin': 'http://localhost:8080',
         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type,Access-Control-Allow-Headers',
+        'Content-type': 'application/json'
     });
     if (req.method == 'OPTIONS') {
         return res.status(200).end();
@@ -33,10 +33,10 @@ router.get('/', (req, res, next) => {
         .then((recipes) => {
             console.log(`API: Found recipes: ${recipes}`);
             res.status(200);
-            res.send(JSON.stringify(recipes));
+            res.json(recipes);
         }).catch((err) => {
             res.status(404);
-            res.send();
+            res.end();
         });
 });
 
@@ -47,10 +47,10 @@ router.get('/:recipeid', (req, res, next) => {
         .then((recipe) => {
             console.log(`API: Found recipe: ${recipe}`);
             res.status(200);
-            res.send(JSON.stringify(recipe));
+            res.json(recipe);
         }).catch((err) => {
             res.status(404);
-            res.send();
+            res.end();
         });
 });
 
@@ -67,11 +67,11 @@ router.post('/:newRecipe', upload.single('imageUrl'), (req, res, next) => {
                 res.status(200);
                 res.set({ 'Content-type': 'multipart/form-data' });
                 console.log(`Added recipe ${recipe}`);
-                res.send({ _id: recipe.id });
-            }).catch(() => {
+                res.json(recipe);
+            }).catch((err) => {
                 //console.log(err);
-                res.status(404).send("There was an issue with the entry please try again");
-                res.send();
+                res.status(404);
+                res.end();
             });
     } else {
         const path = "/public/images/" + req.file.filename;
@@ -86,13 +86,11 @@ router.post('/:newRecipe', upload.single('imageUrl'), (req, res, next) => {
                 res.status(200);
                 res.set({ 'Content-type': 'multipart/form-data' });
                 console.log(`Added recipe ${recipe}`);
-                res.send({ _id: recipe.id });
-            }).catch(() => {
-                //console.log(err);
-                fs.unlinkSync(`.${req.body.imageUrl}`);
-                recipe.imageUrl = '';
-                res.status(404).send("There was an issue with the entry please try again");
-                res.send();
+                res.json(recipe);
+            }).catch((err) => {
+                fs.unlinkSync(`.${path}`);
+                res.status(404);
+                res.end();
             });
     }
 });
@@ -105,10 +103,9 @@ router.put('/updateRecipe/:recipeid', (req, res, next) => {
         .then((updateRecipe) => {
             res.status(200);
             res.json(updateRecipe);
-            //res.send({ _id: recipe.id });
             console.log(`Updated recipe: ${updateRecipe}`);
-        }).catch(() => {
-            res.status(404).send("There was an issue with the entry please try again");
+        }).catch((err) => {
+            res.status(404);
             res.end();
         });
 });
@@ -119,7 +116,7 @@ router.delete('/:recipeid', (req, res, next) => {
     RecipeService.delete(req.params.recipeid)
         .then((recipe) => {
             res.status(200);
-            res.send(JSON.stringify(recipe));
+            res.send(recipe);
             console.log("Deleted recipe");
         }).catch((err) => {
             res.status(404);
@@ -127,20 +124,18 @@ router.delete('/:recipeid', (req, res, next) => {
         });
 });
 
-router.put('/deleteImage/:recipeId', (req, res, next) => {
+router.put('/removeImage/:recipeId', (req, res, next) => {
     fs.unlinkSync(`.${req.body.imageUrl}`);
     let recipe = {
         imageUrl: undefined
     }
     RecipeService.update(req.params.recipeId, recipe)
-        .then((deleteImage) => {
-            console.log(image);
+        .then((removeImage) => {
             res.status(200);
-            res.json(deleteImage);
-            //res.send({ _id: recipe.id });
+            res.json(removeImage);
         }).catch((err) => {
-            res.status(404).send("There was an issue with the entry please try again");
-            res.send();
+            res.status(404);
+            res.end();
         });
 });
 
@@ -154,8 +149,8 @@ router.put('/updatePhoto/:recipeId', upload.single('imageUrl'), (req, res, next)
             console.log(updatePhoto);
             res.status(200);
             res.json(updatePhoto);
-        }).catch(() => {
-            res.status(404).send("There was an issue with the entry please try again");
+        }).catch((err) => {
+            res.status(404);
             res.end();
         });
 });

@@ -76,10 +76,6 @@ export default {
   data() {
     return {
       apiUrl: "http://localhost:3000/api/recipes/",
-      title: null,
-      ingrediants: null,
-      instructions: null,
-      imageUrl: null,
       showConfirmationMessage: false,
       errorMessage: false,
       photoForm: false,
@@ -101,14 +97,12 @@ export default {
     },
     deletePhoto() {
       axios
-        .put(this.apiUrl + "deleteImage/" + this.id, this.recipe)
+        .put(this.apiUrl + "removeImage/" + this.id, this.recipe)
         .then(() => {
           this.errorMessage = false;
           this.$store.dispatch("getRecipes");
           this.showConfirmationMessage = true;
-          //this.photoForm = true;
           setTimeout(() => (this.showConfirmationMessage = false), 2000);
-          //this.$router.push({ path: `'/editRecipe/' + ${this.recipe._id}` });
         })
         .catch(() => {
           this.errorMessage = true;
