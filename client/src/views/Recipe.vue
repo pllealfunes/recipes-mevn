@@ -1,15 +1,32 @@
 <template>
   <div class="hello">
     <div v-if="recipe">
+      {{ recipe }}
       <h1>{{ recipe.title }}</h1>
       <router-link :to="'/editRecipe/' + recipe._id">
         <button>Edit Recipe</button>
       </router-link>
-      <ul id="create-errors" v-if="errors">
-        <li class="error" v-for="(error, index) in errors" :key="index">
-          {{ error.toString() }}
-        </li>
-      </ul>
+      <div id="error-message" v-if="errorMessage">
+        There was an issue with the entry please try again.
+      </div>
+      <div v-if="recipe.favorite">
+        ~ This is a Favorite ~
+        <button
+          data-test="test-add-favorite"
+          id="add-favorite"
+          @click="deleteFavorite()"
+        >
+          Remove from Favorites
+        </button>
+      </div>
+      <button
+        data-test="test-remove-favorite"
+        id="remove-favorite"
+        v-else
+        @click="addFavorite()"
+      >
+        Add to Favorites
+      </button>
       <div v-if="recipe.imageUrl">
         <img :src="'http://localhost:3000' + recipe.imageUrl" alt="" />
       </div>
@@ -57,22 +74,25 @@ export default {
     return {
       apiUrl: "http://localhost:3000/api/recipes/",
       showConfirmationMessage: false,
+      errorMessage: false,
       items: [],
       errors: null,
       newIngrediant: null,
       isFavorite: false,
+      favoriteId: null,
     };
   },
   methods: {
     deleteRecipe() {
-      axios.delete(this.apiUrl + this.id).then((response) => {
-        if (response.data.errors) {
-          this.errors = response.data.errors;
-        } else {
+      axios
+        .delete(this.apiUrl + this.id)
+        .then(() => {
           this.$store.dispatch("getRecipes");
           this.$router.push({ path: "/" });
-        }
-      });
+        })
+        .catch(() => {
+          this.errorMessage = true;
+        });
     },
     addShoppingList(ingrediant) {
       cart.add(ingrediant, 1);
@@ -80,14 +100,25 @@ export default {
       this.showConfirmationMessage = true;
       setTimeout(() => (this.showConfirmationMessage = false), 2000);
     },
-    getFavoriteDeatils() {
-      this.$store.dsipatch("getFavoriteDeatils");
-    },
     addFavorite() {
-      this.$store.dsipatch("addFavorite");
+      axios
+        .put(this.apiUrl + "favorite/" + this.id)
+        .then(() => {
+          this.$store.dispatch("getRecipes");
+        })
+        .catch(() => {
+          this.errorMessage = true;
+        });
     },
     deleteFavorite() {
-      this.$store.dsipatch("deleteFavorite");
+      axios
+        .put(this.apiUrl + "removeFavorite/" + this.id)
+        .then(() => {
+          this.$store.dispatch("getRecipes");
+        })
+        .catch(() => {
+          this.errorMessage = true;
+        });
     },
   },
   computed: {

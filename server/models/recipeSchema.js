@@ -7,6 +7,7 @@ let recipeSchema = new Schema({
     ingrediants: { type: String, minLength: 5, required: true },
     instructions: { type: String, minLength: 5, required: true },
     imageUrl: { type: String },
+    favorite: { type: Boolean, default: false }
 });
 
 

@@ -155,5 +155,37 @@ router.put('/updatePhoto/:recipeId', upload.single('imageUrl'), (req, res, next)
         });
 });
 
+//Make recipe a favorite
+router.put('/favorite/:recipeId', (req, res, next) => {
+    let recipe = {
+        favorite: true,
+    }
+    RecipeService.update(req.params.recipeId, recipe)
+        .then((isFavorite) => {
+            console.log(isFavorite);
+            res.status(200);
+            res.json(isFavorite);
+        }).catch((err) => {
+            res.status(404);
+            res.end();
+        });
+});
+
+//Make recipe a favorite
+router.put('/removeFavorite/:recipeId', (req, res, next) => {
+    let recipe = {
+        favorite: false,
+    }
+    RecipeService.update(req.params.recipeId, recipe)
+        .then((isFavorite) => {
+            console.log(isFavorite);
+            res.status(200);
+            res.json(isFavorite);
+        }).catch((err) => {
+            res.status(404);
+            res.end();
+        });
+});
+
 // export our router
 module.exports = router;
