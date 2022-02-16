@@ -44,40 +44,6 @@ server.use(express.urlencoded({ extended: true }));
 server.use('/public', express.static(path.join(__dirname, 'public')));
 
 
-//Use passport and bcryptjs to search for user in database and log them in
-passport.use(
-    new LocalStrategy({
-        usernameField: 'email',
-        passReqToCallback: true,
-    }, (req, username, password, done) => {
-        User.findOne({ email: username }, (err, user) => {
-            if (err) {
-                console.log(err);
-            }
-            if (!user) {
-                return done(null, false);
-            }
-            bcrypt.compare(password, user.password, (err, req, res) => {
-                if (res) {
-                    // passwords match! log user in
-                    //done(null, user);
-                    //const userJSON = user.toJSON()
-                    let token = jwt.sign({ id: user.id }, process.env.secret, {
-                        expiresIn: 86400 // expires in 24 hours
-                    });
-                    console.log(res);
-                    // res.send({ auth: true, "token": token, "user": user });
-
-                } else {
-                    // passwords do not match!
-                    return done(null, false);
-                }
-            });
-        });
-    })
-);
-
-
 //Passport middleware
 passport.serializeUser((user, done) => {
     done(null, user.id);

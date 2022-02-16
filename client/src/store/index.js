@@ -40,6 +40,8 @@ export default createStore({
         commit('auth_request')
         axios({
           url: 'http://localhost:3000/api/users', data: user, method: 'POST'
+        }, {
+          "Content-Type": "multipart/form-data",
         })
           .then(resp => {
             const token = resp.data.token
