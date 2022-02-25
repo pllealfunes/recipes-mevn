@@ -62,7 +62,9 @@ export default createStore({
     login({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit('auth_request')
-        axios({ url: 'http://localhost:3000/api/auth', data: user, method: 'POST' })
+        axios({ url: apiUrl + 'api/auth', data: user, method: 'POST' }, {
+          "Content-Type": "multipart/form-data",
+        })
           .then(resp => {
             const token = resp.data.token
             //const user = user

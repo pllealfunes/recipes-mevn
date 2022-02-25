@@ -1,10 +1,19 @@
-const express = require("express");
-const authRouter = express.Router();
+var express = require("express");
+var router = express.Router();
 const passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 const jwt = require("jsonwebtoken");
+const User = require("./models/userSchema");
+const bcrypt = require("bcryptjs");
+const session = require("express-session");
+const { check, validationResult } = require('express-validator');
+require("dotenv").config();
 
-authRouter.post('/', (req, username, password, done) => {
+router.get('/', function (req, res) {
+    console.log("Hello from authController");
+});
+
+router.post('/', (req, res, next) => {
     passport.use(
         new LocalStrategy({
             usernameField: 'email',
@@ -39,4 +48,4 @@ authRouter.post('/', (req, username, password, done) => {
 }
 );
 
-module.exports = authRouter;
+module.exports = router;

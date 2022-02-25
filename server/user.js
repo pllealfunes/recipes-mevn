@@ -9,13 +9,10 @@ const jwt = require("jsonwebtoken");
 const { check, validationResult } = require('express-validator');
 require("dotenv").config();
 
-router.get('/', function (err, req, res, next) {
-    if (err) {
-        console.log(err);
-    } else {
-        console.log(res);
-    }
+router.get('/', function (req, res) {
+    console.log("Hello from userController");
 });
+
 router.post("/", [
     check('name', 'Name must have more than 5 characters').not().bail().isEmpty().bail().isLength({ min: 5 }).bail(),
     check('password', 'Your password must be at least 5 characters').not().bail().isEmpty().bail().isLength({ min: 5 }).bail(),
